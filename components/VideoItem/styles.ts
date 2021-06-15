@@ -7,19 +7,19 @@ const styles = StyleSheet.create({
     },
     timeContainer : {
         backgroundColor: "#00000099",
-        height: 25, 
-        width: 50,
+        height: 20, 
         alignItems: 'center', 
         justifyContent: 'center',
-        borderRadius: 4, 
+        borderRadius: 3, 
         position: 'absolute',
         right: 5, 
-        bottom: 5,
+        bottom: 6,
     
     },
     timeText: {
         color: 'white',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        bottom: 1,
     },
     avatar: {
         width: 50, 

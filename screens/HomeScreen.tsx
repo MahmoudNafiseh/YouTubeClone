@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, Image , StyleSheet, FlatList} from 'react-native'
-import { Entypo } from '@expo/vector-icons';
 import VideoItem from '../components/VideoItem';
 import videos from '../assets/data/videos.json'
 const HomeScreen = () => {

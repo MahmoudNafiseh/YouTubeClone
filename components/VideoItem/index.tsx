@@ -21,12 +21,21 @@ type VideoItem = {
 }
 const VideoItem = ({video}: VideoItem) => {
 
+    const vidMinutes = Math.floor(video.duration / 60)
+    const vidSeconds = video.duration % 60
+
+    let viewString = video.views.toString()
+    if(video.views > 1000000) {
+        viewString = (video.views / 1000000).toFixed(1) + 'M'
+    } else if (video.views > 1000){
+        viewString =(video.views / 1000).toFixed(1).slice(0,(video.views / 1000).toFixed(1).toString().indexOf('.')) + 'K'
+    }
     return ( 
         <View>
             <View>
                 <Image style={styles.thumbnail} source={{uri: video.thumbnail}} />
                 <View style = {styles.timeContainer}>
-                    <Text style= {styles.timeText}>{video.duration}</Text>
+                    <Text style= {styles.timeText}> {vidMinutes}:{vidSeconds.toFixed(2).slice(0,2)} </Text>
                 </View>
             </View>
 
@@ -39,11 +48,11 @@ const VideoItem = ({video}: VideoItem) => {
                         {video.title}
                     </Text>
                     <Text style= {styles.subtitle}>
-                    {video.user.name} · {video.views} · {video.createdAt}
+                    {video.user.name} · {viewString} · {video.createdAt}
                     </Text>
                 </View>
                 <View style={styles.threeDotsContainer}>
-                    <Entypo style={styles.threeDots}name="dots-three-vertical" size={16} color="black" />
+                    <Entypo style={styles.threeDots}name="dots-three-vertical" size={12} color="black" />
                 </View>
             </View>
         </View>
