@@ -2,8 +2,9 @@ import React from 'react'
 import { View, Text, Image , StyleSheet} from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import styles from './styles'
+import { Avatar } from 'react-native-elements';
 
-type VideoItem = {
+interface VideoItem {
     video:{
         id: string;
         createdAt: string; 
@@ -41,7 +42,7 @@ const VideoItem = ({video}: VideoItem) => {
 
             <View style={styles.titleRow}>
                 <View style={styles.imageCol}>
-                    <Image style={styles.avatar} source= {{uri: video.user.image}}/>
+                <Avatar rounded size={50} source={{uri: video.user.image}} />
                 </View>
                 <View style={styles.textContainer}>
                     <Text style= {styles.title}>

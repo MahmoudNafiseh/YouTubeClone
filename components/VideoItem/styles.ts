@@ -21,11 +21,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         bottom: 1,
     },
-    avatar: {
-        width: 50, 
-        height: 50,
-        borderRadius: 25
-    },
     title:{
         color: "white",
         fontSize: 16, 
