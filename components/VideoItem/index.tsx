@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, Image , StyleSheet} from 'react-native'
+import { View, Text, Image , Pressable} from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 import styles from './styles'
 import { Avatar } from 'react-native-elements';
-
+import { useNavigation } from '@react-navigation/native'
 interface VideoItem {
     video:{
         id: string;
@@ -24,7 +24,10 @@ const VideoItem = ({video}: VideoItem) => {
 
     const vidMinutes = Math.floor(video.duration / 60)
     const vidSeconds = video.duration % 60
-
+    const navigation = useNavigation()
+    const openVideoPage = () => {
+        navigation.navigate("VideoScreen", {id: video.id})
+    }
     let viewString = video.views.toString()
     if(video.views > 1000000) {
         viewString = (video.views / 1000000).toFixed(1) + 'M'
@@ -32,7 +35,7 @@ const VideoItem = ({video}: VideoItem) => {
         viewString =(video.views / 1000).toFixed(1).slice(0,(video.views / 1000).toFixed(1).toString().indexOf('.')) + 'K'
     }
     return ( 
-        <View>
+        <Pressable onPress={openVideoPage} style={styles.videoCard}>
             <View>
                 <Image style={styles.thumbnail} source={{uri: video.thumbnail}} />
                 <View style = {styles.timeContainer}>
@@ -42,7 +45,7 @@ const VideoItem = ({video}: VideoItem) => {
 
             <View style={styles.titleRow}>
                 <View style={styles.imageCol}>
-                <Avatar rounded size={50} source={{uri: video.user.image}} />
+                <Avatar rounded size={38} source={{uri: video.user.image}} />
                 </View>
                 <View style={styles.textContainer}>
                     <Text style= {styles.title}>
@@ -56,7 +59,7 @@ const VideoItem = ({video}: VideoItem) => {
                     <Entypo style={styles.threeDots}name="dots-three-vertical" size={12} color="black" />
                 </View>
             </View>
-        </View>
+        </Pressable>
     )
 }
 

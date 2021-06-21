@@ -5,6 +5,9 @@ const styles = StyleSheet.create({
         width: "100%", 
         aspectRatio: 16/9
     },
+    videoCard: {
+        marginBottom: 15,
+    },
     timeContainer : {
         backgroundColor: "#00000099",
         height: 20, 

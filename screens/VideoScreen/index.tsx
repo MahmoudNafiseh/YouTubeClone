@@ -1,14 +1,15 @@
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import { 
     View,
     Text, 
-    Image, 
     SafeAreaView, 
     ScrollView, 
-    FlatList
-} from 'react-native'
+    FlatList,
+    Pressable,
+    StatusBar
+} from 'react-native';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import { Avatar } from 'react-native-elements';
-import { Audio, Video } from 'expo-av';
 import video from '../../assets/data/video.json'
 import videos from '../../assets/data/videos.json'
 import VideoItem from '../../components/VideoItem'
@@ -17,8 +18,17 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import VideoPlayer from '../../components/VideoPlayer';
+import VideoComments from '../../components/VideoComments';
+import VideoComment from '../../components/VideoComment';
+import comments from '../../assets/data/comments.json'
 
 const VideoScreen = () => {
+    const commentsRef = useRef<BottomSheetModal>(null);
+
+
+    const openComments = () => {
+        commentsRef.current?.present()
+    }
 
     let viewString = video.views.toString()
     if(video.views > 1000000) {
@@ -39,13 +49,13 @@ const VideoScreen = () => {
     } else if (video.dislikes > 1000){
         dislikeString =(video.dislikes / 1000).toFixed(1).slice(0,(video.dislikes / 1000).toFixed(1).toString().indexOf('.')) + 'K'
     }
-
-
     return (
-        <View>
+        
+        <View style={{flex: 1}}>
+        
 
 
-
+        {/*title*/}
             <View style={styles.videoInfoContainer}>
                     <Text style= {styles.title}>
                         {video.title}
@@ -54,8 +64,9 @@ const VideoScreen = () => {
                         {viewString} views · {video.createdAt}
                     </Text>
             </View>
+        {/*like/dislike/etc*/}
 
-            <View style={styles.actionListContainer}>
+            <View style={[styles.actionListContainer, {flex: 1}]}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} overScrollMode={'never'} contentContainerStyle={styles.scrollViewContainer}>
                     <View style={styles.actionListItem}>
                         <AntDesign name="like2" size={20} color="lightgrey" />
@@ -95,8 +106,9 @@ const VideoScreen = () => {
                 </ScrollView>
             </View>
 
+        {/*channel uploader/subscribe */}
 
-            <View style={[styles.channelRowView, {alignItems:'center'}]}>
+            <View style={[styles.channelRowView, {alignItems:'center', flex: 1}]}>
                     <Avatar containerStyle={styles.avatar} rounded size={32} source={{uri: video.user.image}} />
 
                     <View style={{marginHorizontal: 5, flexGrow: 1}}>
@@ -108,13 +120,28 @@ const VideoScreen = () => {
                 
             </View>
             
-            <View style={{paddingLeft:10, flex:1, borderBottomColor:'#333333', borderBottomWidth:7  }}>
+            
+            {/*comments*/}
+
+            <Pressable onPress={openComments} style={{paddingLeft:10, flex:1, borderBottomColor:'#333333', borderBottomWidth:7  }}>
                 <Text style={{color: 'white', paddingBottom: 10}}>Comments 333</Text>
-                <View style={styles.commentRowView}>
-                    <Avatar containerStyle={[styles.avatar, {marginVertical: 10,}]} rounded size={27} source={{uri: video.user.image}} />
-                    <Text style={[styles.commentRowText, {color: 'white'}]}>Testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</Text>
-                </View>
-            </View>
+                <VideoComment comment={comments[0]} />
+            </Pressable>
+
+
+            {/*comment page*/}
+                <BottomSheetModal 
+                backgroundComponent={({style}) =>(<View style={[style, {  backgroundColor: "#272727" }]} />)} 
+                handleComponent={()=>(<View><Text style={{color: 'white', padding: 15, fontSize: 16, paddingBottom: 0}}>Comments 333</Text>
+                </View>)}
+                ref={commentsRef}
+                snapPoints={['67.01%']} 
+                enableFlashScrollableIndicatorOnExpand={false}
+                index={0}>
+                    <VideoComments />
+                </BottomSheetModal>
+
+
 
 
         </View>
@@ -122,15 +149,25 @@ const VideoScreen = () => {
 }
 
 const fullVideoScreen = () => {
+
     return (
-        <SafeAreaView style={{backgroundColor: '#272727', flex: 1}}>
+        <SafeAreaView style={{backgroundColor: '#272727', flex: 1, marginTop: StatusBar.currentHeight}} >
+                    
+
+
             <VideoPlayer videoUri={video.videoUrl} thumbnailUri={video.thumbnail}/>
 
-            <FlatList 
-            data={videos}
-            renderItem={({item}) => <VideoItem video={item} /> }
-            ListHeaderComponent={VideoScreen}
-            />
+            <BottomSheetModalProvider >
+
+                <FlatList 
+                data={videos}
+                renderItem={({item}) => <VideoItem video={item} /> }
+                ListHeaderComponent={VideoScreen}
+                showsVerticalScrollIndicator={false}
+                />
+
+            </BottomSheetModalProvider>
+
         </SafeAreaView>
     )
 }

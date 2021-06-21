@@ -9,29 +9,26 @@ interface VideoPlayerType {
 
 }
 const VideoPlayer = ({videoUri, thumbnailUri}: VideoPlayerType) => {
+
     const videoRef = useRef<Video>(null)
+
+
     const onFullscreenUpdate = async ({fullscreenUpdate}) => {
         switch (fullscreenUpdate) {
             case Video.FULLSCREEN_UPDATE_PLAYER_DID_PRESENT:
-                await ScreenOrientation.unlockAsync() // only on Android required
-                break;
+                await ScreenOrientation.unlockAsync() // we use this on Android since video will not automatically rotate when we change screen orientation
+                break;                               //video will not automatically rotate when we change screen orientation
             case Video.FULLSCREEN_UPDATE_PLAYER_WILL_DISMISS:
-                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT) // only on Android required
-                break;
+                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT) // we use this on Android since 
+                break;                                                                      //video will not automatically rotate when we change screen orientation
         }
     }
-    
-    const onRefAssign = (vidElement: Video) => {
-        videoRef.current = vidElement
-        console.warn("video is mounted")
-        const playbackObject = vidElement
-        const source = {uri: videoUri}
-        playbackObject.loadAsync(source)
-    }
+
     return (
         <View>
             <Video
             source={{uri: videoUri}}
+            ref={videoRef}
             style={{width: '100%', aspectRatio: 16/9}}
             posterSource={{uri: thumbnailUri}}
             usePoster={true}
@@ -41,6 +38,7 @@ const VideoPlayer = ({videoUri, thumbnailUri}: VideoPlayerType) => {
             resizeMode="contain"
             onFullscreenUpdate={onFullscreenUpdate}            
             useNativeControls={true}
+            onLoad={()=>videoRef.current.playAsync()}
             />
         </View>
     )

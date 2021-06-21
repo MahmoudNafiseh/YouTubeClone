@@ -16,9 +16,10 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <VideoScreen />
-        <StatusBar />
+      <SafeAreaProvider style={{flex:1}}>
+        
+        <Navigation colorScheme={'dark'} />
+        <StatusBar style="light" backgroundColor='#141414'/>
       </SafeAreaProvider>
     );
   }
