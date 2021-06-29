@@ -1,9 +1,20 @@
-import React from 'react'
-import { View, Text, Image , StyleSheet, FlatList} from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { View, StyleSheet, FlatList} from 'react-native'
+import { DataStore } from '@aws-amplify/datastore';
 import VideoItem from '../components/VideoItem';
-import videos from '../assets/data/videos.json'
-const HomeScreen = () => {
+import { Video } from '../src/models/'
 
+const HomeScreen = () => {
+    const [videos, setVideos] = useState<Video[]>([])
+
+    useEffect(()=> {
+        const fetchVideos = async () => {
+            const response = await DataStore.query(Video);
+            setVideos(response)
+        } 
+        fetchVideos()
+    }, [])
+    console.log(videos)
     return ( 
         <View>
             <FlatList 

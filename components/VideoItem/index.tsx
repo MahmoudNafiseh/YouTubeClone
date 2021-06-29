@@ -4,23 +4,11 @@ import { Entypo } from '@expo/vector-icons';
 import styles from './styles'
 import { Avatar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native'
+import { Video } from '../../src/models';
 interface VideoItem {
-    video:{
-        id: string;
-        createdAt: string; 
-        title: string;
-        thumbnail: string;
-        videoUrl: string;
-        duration: number; 
-        views: number; 
-        user: {
-            name: string; 
-            image?: string;
-        }
-
-    }
+    video: Video
 }
-const VideoItem = ({video}: VideoItem) => {
+const VideoItem = ({video}) => {
 
     const vidMinutes = Math.floor(video.duration / 60)
     const vidSeconds = video.duration % 60
@@ -45,14 +33,14 @@ const VideoItem = ({video}: VideoItem) => {
 
             <View style={styles.titleRow}>
                 <View style={styles.imageCol}>
-                <Avatar rounded size={38} source={{uri: video.user.image}} />
+                    <Avatar rounded size={38} source={{uri: video.User?.image}} />
                 </View>
                 <View style={styles.textContainer}>
                     <Text style= {styles.title}>
-                        {video.title}
+                        {video?.title}
                     </Text>
                     <Text style= {styles.subtitle}>
-                    {video.user.name} · {viewString} · {video.createdAt}
+                        {video.User?.username} · {viewString} · {video?.createdAt}
                     </Text>
                 </View>
                 <View style={styles.threeDotsContainer}>

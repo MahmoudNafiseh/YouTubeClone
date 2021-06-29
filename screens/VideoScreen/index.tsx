@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import { 
     View,
     Text, 
@@ -6,12 +6,12 @@ import {
     ScrollView, 
     FlatList,
     Pressable,
-    StatusBar
+    StatusBar,
+    ActivityIndicator
 } from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import { Avatar } from 'react-native-elements';
-import video from '../../assets/data/video.json'
-import videos from '../../assets/data/videos.json'
+
 import VideoItem from '../../components/VideoItem'
 import styles from './styles'
 import { AntDesign } from '@expo/vector-icons';
@@ -20,14 +20,43 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import VideoPlayer from '../../components/VideoPlayer';
 import VideoComments from '../../components/VideoComments';
 import VideoComment from '../../components/VideoComment';
-import comments from '../../assets/data/comments.json'
+import { Video, Comment } from '../../src/models'
+import { useRoute } from '@react-navigation/native';
+import { DataStore } from '@aws-amplify/datastore'
+import videos from '../../assets/data/videos.json'
+
 
 const VideoScreen = () => {
+    const [video, setVideo] = useState<Video | null >(null)
+    const [comments, setComments] = useState<Comment[]>([])
+    const route = useRoute()
+    const videoId = route.params?.id
+    useEffect(() => {
+        DataStore.query(Video, videoId).then(setVideo)
+    }, [videoId])
+
+
+        useEffect(()=> {
+            const fetchComments = async()=> {
+            if (!video) {
+                return
+            }
+            const videoComments = ((await DataStore.query(Comment)).filter((comment) => comment.videoID === video.id))
+            setComments(videoComments)
+            console.log("TEXT",videoComments)
+        }
+        fetchComments()
+        }, [video])
+    
     const commentsRef = useRef<BottomSheetModal>(null);
 
 
     const openComments = () => {
         commentsRef.current?.present()
+    }
+
+    if (video ===null) {
+        return <ActivityIndicator />
     }
 
     let viewString = video.views.toString()
@@ -109,11 +138,11 @@ const VideoScreen = () => {
         {/*channel uploader/subscribe */}
 
             <View style={[styles.channelRowView, {alignItems:'center', flex: 1}]}>
-                    <Avatar containerStyle={styles.avatar} rounded size={32} source={{uri: video.user.image}} />
+                    <Avatar containerStyle={styles.avatar} rounded size={32} source={{uri: video.User.image}} />
 
                     <View style={{marginHorizontal: 5, flexGrow: 1}}>
-                        <Text style={[styles.channelRowTextName, {color: 'white'}]}>{video.user.name}</Text>
-                        <Text style={[styles.channelRowTextSubs, {color: 'grey'}]}>{video.user.subscribers} subscribers</Text>
+                        <Text style={[styles.channelRowTextName, {color: 'white'}]}>{video.User.username}</Text>
+                        <Text style={[styles.channelRowTextSubs, {color: 'grey'}]}>{video.User.subscribers} subscribers</Text>
                     </View>
 
                 <Text style={[styles.channelRowTextSub, {fontWeight: 'bold', padding: 10}]}>SUBSCRIBE</Text>
@@ -125,20 +154,21 @@ const VideoScreen = () => {
 
             <Pressable onPress={openComments} style={{paddingLeft:10, flex:1, borderBottomColor:'#333333', borderBottomWidth:7  }}>
                 <Text style={{color: 'white', paddingBottom: 10}}>Comments 333</Text>
-                <VideoComment comment={comments[0]} />
+                {comments.length > 0 && <VideoComment comment={comments[0]} />}
             </Pressable>
 
 
             {/*comment page*/}
                 <BottomSheetModal 
-                backgroundComponent={({style}) =>(<View style={[style, {  backgroundColor: "#272727" }]} />)} 
+                style={{flexGrow: 1}}
+                backgroundComponent={({style}) =>(<View style={[style, {  backgroundColor: "#272727", flexGrow: 1 }]} />)} 
                 handleComponent={()=>(<View><Text style={{color: 'white', padding: 15, fontSize: 16, paddingBottom: 0}}>Comments 333</Text>
                 </View>)}
                 ref={commentsRef}
-                snapPoints={['67.01%']} 
+                snapPoints={['65%',]} 
                 enableFlashScrollableIndicatorOnExpand={false}
                 index={0}>
-                    <VideoComments />
+                    <VideoComments comments = {comments} videoID={videoId}/>
                 </BottomSheetModal>
 
 
@@ -149,6 +179,15 @@ const VideoScreen = () => {
 }
 
 const fullVideoScreen = () => {
+    const [video, setVideo] = useState<Video | undefined >(undefined);
+    const route = useRoute()
+    const videoId = route.params?.id;
+    useEffect(() => {
+        DataStore.query(Video, videoId).then(setVideo)
+    }, [videoId])
+    if (!video) {
+        return <ActivityIndicator />
+    }
 
     return (
         <SafeAreaView style={{backgroundColor: '#272727', flex: 1, marginTop: StatusBar.currentHeight}} >
@@ -157,8 +196,7 @@ const fullVideoScreen = () => {
 
             <VideoPlayer videoUri={video.videoUrl} thumbnailUri={video.thumbnail}/>
 
-            <BottomSheetModalProvider >
-
+          <BottomSheetModalProvider >
                 <FlatList 
                 data={videos}
                 renderItem={({item}) => <VideoItem video={item} /> }
