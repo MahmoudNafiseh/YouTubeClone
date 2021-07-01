@@ -21,16 +21,21 @@ import VideoPlayer from '../../components/VideoPlayer';
 import VideoComments from '../../components/VideoComments';
 import VideoComment from '../../components/VideoComment';
 import { Video, Comment } from '../../src/models'
-import { useRoute } from '@react-navigation/native';
+import { useRoute, RouteProp  } from '@react-navigation/native';
 import { DataStore } from '@aws-amplify/datastore'
 import videos from '../../assets/data/videos.json'
 
-
 const VideoScreen = () => {
+    type AppRouteParamList = {
+        Home: undefined // undefined means Home route doesn't have route parameters
+        Video: { id: string } | undefined
+    }
+    
     const [video, setVideo] = useState<Video | null >(null)
     const [comments, setComments] = useState<Comment[]>([])
-    const route = useRoute()
+    const route = useRoute<RouteProp<AppRouteParamList, 'Video'>>()
     const videoId = route.params?.id
+
     useEffect(() => {
         DataStore.query(Video, videoId).then(setVideo)
     }, [videoId])
@@ -43,7 +48,7 @@ const VideoScreen = () => {
             }
             const videoComments = ((await DataStore.query(Comment)).filter((comment) => comment.videoID === video.id))
             setComments(videoComments)
-            console.log("TEXT",videoComments)
+            console.log("Comments Log",videoComments)
         }
         fetchComments()
         }, [video])
@@ -153,8 +158,8 @@ const VideoScreen = () => {
             {/*comments*/}
 
             <Pressable onPress={openComments} style={{paddingLeft:10, flex:1, borderBottomColor:'#333333', borderBottomWidth:7  }}>
-                <Text style={{color: 'white', paddingBottom: 10}}>Comments 333</Text>
-                {comments.length > 0 && <VideoComment comment={comments[0]} />}
+                <Text style={{color: 'white', paddingBottom: 10}}>Comments {comments.length}</Text>
+                {comments.length > 0 && <VideoComment comment={comments[comments.length-1]} />}
             </Pressable>
 
 
@@ -179,9 +184,16 @@ const VideoScreen = () => {
 }
 
 const fullVideoScreen = () => {
+    type AppRouteParamList = {
+        Home: undefined // undefined means Home route doesn't have route parameters
+        Video: { id: string } | undefined
+    }
+
     const [video, setVideo] = useState<Video | undefined >(undefined);
-    const route = useRoute()
-    const videoId = route.params?.id;
+
+    const route = useRoute<RouteProp<AppRouteParamList, 'Video'>>()
+    const videoId = route.params?.id
+
     useEffect(() => {
         DataStore.query(Video, videoId).then(setVideo)
     }, [videoId])

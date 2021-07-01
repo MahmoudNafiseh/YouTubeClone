@@ -19,7 +19,9 @@ const HomeScreen = () => {
         <View>
             <FlatList 
             data={videos}
-            renderItem={({item}) => <VideoItem video={item} /> }
+            renderItem={({item}) => <VideoItem video={item}
+             /> }
+             style={{backgroundColor: '#272727'}}
             />
         </View>
     )

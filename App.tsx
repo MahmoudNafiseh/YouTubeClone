@@ -2,7 +2,6 @@ import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect} from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
@@ -11,6 +10,8 @@ import config from './src/aws-exports'
 import { withAuthenticator } from "aws-amplify-react-native"
 Amplify.configure(config)
 import {User} from './src/models'
+
+
  function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -28,7 +29,7 @@ import {User} from './src/models'
           subscribers: 0
         }))
       } else {
-        console.warn('User already exists')
+        console.log('User already exists')
       }
     }
 

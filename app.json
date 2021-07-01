@@ -27,9 +27,19 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
+   
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "androidNavigationBar": {
+      "visible": true,
+      
+      "barStyle": "light-content",
+  
+ 
+      "backgroundColor": "#272727"
     }
+
   }
 }
