@@ -32,9 +32,7 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "androidNavigationBar": {
-      "visible": true,
-      
+    "androidNavigationBar": {      
       "barStyle": "light-content",
   
  

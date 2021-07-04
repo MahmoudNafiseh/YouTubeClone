@@ -15,6 +15,7 @@ export type BottomTabParamList = {
   Add: undefined;
   Subscriptions: undefined;
   Library: undefined;
+  UploadScreen: undefined;
 };
 
 export type TabOneParamList = {
