@@ -15,8 +15,9 @@ const VideoItem = ({ video }) => {
     if (video.thumbnail.startsWith("http")) setThumbnail(video.thumbnail);
     else Storage.get(video.thumbnail).then(setThumbnail);
   }, [video]);
-  const vidMinutes = Math.floor(video.duration / 60);
-  const vidSeconds = video.duration % 60;
+  console.log("IDEO", video.duration);
+  const vidMinutes = Math.floor(video.duration / 10 / 60);
+  const vidSeconds = (Math.floor(video.duration / 10) / 10) % 6;
   const navigation = useNavigation();
   const openVideoPage = () => {
     navigation.navigate("VideoScreen", { id: video.id });
@@ -38,7 +39,7 @@ const VideoItem = ({ video }) => {
         <View style={styles.timeContainer}>
           <Text style={styles.timeText}>
             {" "}
-            {vidMinutes}:{vidSeconds.toFixed(2).slice(0, 2)}{" "}
+            {vidMinutes}:{vidSeconds.toFixed(1).replace(".", "")}{" "}
           </Text>
         </View>
       </View>

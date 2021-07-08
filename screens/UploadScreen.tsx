@@ -17,6 +17,9 @@ import { Storage, DataStore, Auth } from "aws-amplify";
 import * as VideoThumbnails from "expo-video-thumbnails";
 import { Video, User } from "../src/models";
 
+type ImagePickerResult = {
+  duration: number;
+};
 const UploadScreen = ({ navigation }) => {
   const [video, setVideo] = useState<string | null>(null);
   const [duration, setDuration] = useState<number | null>(0);
@@ -88,7 +91,7 @@ const UploadScreen = ({ navigation }) => {
   };
   const upload = async () => {
     if (!video) {
-      return;
+      return alert("Please select a video");
     }
     const userInfo = await Auth.currentAuthenticatedUser();
     const userId = userInfo.attributes.sub;
@@ -134,13 +137,13 @@ const UploadScreen = ({ navigation }) => {
         placeholder="Title"
         value={title}
         onChangeText={setTitle}
-        style={{ color: "white", backgroundColor: "white", width: "50%" }}
+        style={{ color: "#000", backgroundColor: "white", width: "50%" }}
       />
       <TextInput
         placeholder="Tags separated by comma"
         value={tags}
         onChangeText={setTags}
-        style={{ color: "white", backgroundColor: "white", width: "50%" }}
+        style={{ color: "#000", backgroundColor: "white", width: "50%" }}
       />
       <Button
         title="Upload"

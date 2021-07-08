@@ -20,24 +20,21 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "requireFullScreen":true
+      "requireFullScreen": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-   
+      },
+      "package": "com.mahmoudnafiseh.YoutubeClone"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "androidNavigationBar": {      
+    "androidNavigationBar": {
       "barStyle": "light-content",
-  
- 
       "backgroundColor": "#272727"
     }
-
   }
 }

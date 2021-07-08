@@ -8,7 +8,12 @@ import Navigation from "./navigation";
 import Amplify, { Auth, DataStore } from "aws-amplify";
 import config from "./src/aws-exports";
 import { withAuthenticator } from "aws-amplify-react-native";
-Amplify.configure(config);
+Amplify.configure({
+  ...config,
+  Analytics: {
+    disabled: true,
+  },
+});
 import { User } from "./src/models";
 
 function App() {
